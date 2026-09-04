@@ -24,11 +24,7 @@ return {
         null_ls.builtins.formatting.shfmt,
 
         -- python
-        null_ls.builtins.diagnostics.mypy.with({
-          extra_args = { "--python-executable", py },
-        }),
-        null_ls.builtins.formatting.isort,
-        -- null_ls.builtins.formatting.black,
+        null_ls.builtins.formatting.black,
       },
 
       -- you can reuse a shared lspconfig on_attach callback here
