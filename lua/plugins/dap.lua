@@ -142,7 +142,7 @@ return {
       local dap = require("dap")
       local dap_python = require("dap-python")
 
-      local debugpy_path = vim.fn.expand("~/.local/share/nvim/mason/packages/debugpy/venv/bin/python")
+      local debugpy_path = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
       dap_python.setup(debugpy_path)
 
       dap.configurations.python = {

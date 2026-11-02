@@ -1,8 +1,7 @@
-vim.api.nvim_create_augroup("PHPFormatOnSave", { clear = true })
-
+local group = vim.api.nvim_create_augroup("PHPFormatOnSave_" .. vim.api.nvim_get_current_buf(), { clear = true })
 vim.api.nvim_create_autocmd("BufWritePre", {
-	group = "PHPFormatOnSave",
-	pattern = "*.php",
+	group = group,
+	buffer = 0,
 	callback = function(args)
 		vim.lsp.buf.format({
 			bufnr = args.buf,

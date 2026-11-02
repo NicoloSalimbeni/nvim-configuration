@@ -1,11 +1,9 @@
 return {
-	{
-		"hrsh7th/cmp-nvim-lsp",
-		"hrsh7th/cmp-buffer",
-		"hrsh7th/cmp-path",
-		"hrsh7th/cmp-cmdline",
-		"onsails/lspkind.nvim",
-	},
+	{ "hrsh7th/cmp-nvim-lsp" },
+	{ "hrsh7th/cmp-buffer" },
+	{ "hrsh7th/cmp-path" },
+	{ "hrsh7th/cmp-cmdline" },
+	{ "onsails/lspkind.nvim" },
 	{
 		"L3MON4D3/LuaSnip",
 		dependencies = {
@@ -15,16 +13,17 @@ return {
 	},
 	{
 		"hrsh7th/nvim-cmp",
+		dependencies = { "cmp-nvim-lsp", "cmp-buffer", "cmp-path", "cmp-cmdline", "lspkind.nvim", "LuaSnip" },
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
 			require("luasnip.loaders.from_vscode").lazy_load()
-			require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/nvim/luasnippets/" })
+			require("luasnip.loaders.from_lua").lazy_load({ paths = vim.fn.stdpath("config") .. "/luasnippets" })
 			-- Make HTML snippets available in PHP files
 			luasnip.filetype_extend("php", { "html" })
 
 			local has_words_before = function()
-				unpack = unpack or table.unpack
+				local unpack = unpack or table.unpack
 				local line, col = unpack(vim.api.nvim_win_get_cursor(0))
 				return col ~= 0
 					and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
@@ -78,8 +77,6 @@ return {
 					{ name = "luasnip" }, -- For luasnip users.
 					{ name = "buffer" },
 					{ name = "path" },
-				}, {
-					{ name = "buffer" },
 				}),
 				formatting = {
 					fields = { "kind", "abbr", "menu" },
@@ -93,6 +90,14 @@ return {
 						return kind
 					end,
 				},
+			})
+			cmp.setup.cmdline({ "/", "?" }, {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = { { name = "buffer" } },
+			})
+			cmp.setup.cmdline(":", {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }),
 			})
 		end,
 	},

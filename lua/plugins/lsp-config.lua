@@ -8,8 +8,10 @@ return {
 
   {
     "williamboman/mason-lspconfig.nvim",
+    dependencies = { "mason.nvim", "nvim-lspconfig" },
     config = function()
       require("mason-lspconfig").setup({
+        automatic_enable = false,
         ensure_installed = {
           "clangd",
           "bashls",
@@ -26,6 +28,7 @@ return {
 
   {
     "neovim/nvim-lspconfig",
+    dependencies = { "cmp-nvim-lsp" },
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
       local border = "rounded"
@@ -60,11 +63,6 @@ return {
           })
         end,
       })
-
-      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-        vim.lsp.handlers.hover,
-        { border = border }
-      )
 
       setup_lsp("clangd", {
         capabilities = capabilities,
@@ -127,7 +125,7 @@ return {
       })
 
       vim.keymap.set("n", "K", function()
-        vim.lsp.buf.hover()
+        vim.lsp.buf.hover({ border = border })
       end, { desc = "LSP hover" })
 
       vim.keymap.set("n", "gd", vim.lsp.buf.definition, {

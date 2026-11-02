@@ -1,7 +1,7 @@
 return {
   "lervag/vimtex",
-  config = function()
-    -- Use init for configuration, don't use the more common "config".
+  init = function()
+    vim.g.vimtex_quickfix_open_on_warning = 0
     vim.cmd([[let g:vimtex_view_method = 'zathura']])
   end,
 }

@@ -1,5 +1,6 @@
 return {
 	"nvimtools/none-ls.nvim",
+	dependencies = { "nvim-lua/plenary.nvim", "mason.nvim" },
 	event = { "BufReadPre", "BufNewFile" },
 	config = function()
 		local null_ls = require("null-ls")
@@ -11,7 +12,11 @@ return {
 
 				-- C++
 				null_ls.builtins.formatting.clang_format,
-				null_ls.builtins.diagnostics.cppcheck,
+				null_ls.builtins.diagnostics.cppcheck.with({
+					condition = function()
+						return vim.fn.executable("cppcheck") == 1
+					end,
+				}),
 
 				-- CMake
 				null_ls.builtins.diagnostics.cmake_lint,

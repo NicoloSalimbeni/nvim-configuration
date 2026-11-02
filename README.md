@@ -1,105 +1,131 @@
-# 🌟 My NeoVim Configuration 🌟
+# Neovim configuration
 
-Welcome to my NeoVim setup! Here, you'll find the configuration files and plugins that make up my customized NeoVim environment. Feel free to explore, and if you find anything interesting, consider adapting it for your own use.
-
-## Table of Contents
-- [Introduction](#introduction)
-- [Configuration Highlights](#configuration-highlights)
-- [Installation](#installation)
-- [Plugins](#plugins)
-- [Feedback](#feedback)
-
-## Introduction
-
-NeoVim is a powerful text editor that I've customized to suit my workflow and preferences. This repository contains the configuration files and settings that make up my personalized NeoVim setup. My setup is based on the basic structure proposed in this [video](https://www.youtube.com/watch?v=vdn_pKJUda8). Starting from this I then adapted the various plugins to my use case (experimental physics student: c++, pyhton, latex, markdown).
-
-## Preview
-
-![](docs/images/preview.png)
-
-## Configuration Highlights
-
-- **Speed:** Speed of navigation between files and documents
-- **Key Mappings:** Customized key mappings to enhance productivity.
-
-Explore the [lua](lua/) directory for a detailed look at my NeoVim settings.
-
-## Dependencies
-
-Make sure you have the following dependencies installed to use this NeoVim configuration:
-
-1. **[NeoVim](https://github.com/neovim/neovim)**: (v0.9.4 recommended);
-2. **[Nerd Fonts](https://github.com/ryanoasis/nerd-fonts) for Icons**;
-
-3. **True-Color Terminal**: requested by the color theme, I'm using alacritty, but any true color terminal should be fine; 
+Configuration for C++, Python, LaTeX, Markdown and web development, using
+lazy.nvim and Catppuccin Macchiato. Validated with Neovim v0.12.6.
+The LSP configuration requires Neovim 0.11 or newer.
 
 ## Installation
 
-1. Clone this repository to your local machine:
+On Ubuntu 24.04 or newer, clone the repository and run the installer as your
+regular user:
 
-    ```bash
-    git clone https://github.com/NicoloSalimbeni/nvim-configuration ~/.config/nvim
-    ```
+```bash
+git clone https://github.com/NicoloSalimbeni/nvim-configuration ~/.config/nvim
+cd ~/.config/nvim
+./configure.sh --dry-run
+./configure.sh
+```
 
-2. Enter the downloaded folder, then in the file path nvim/lua/nicolo/ you will find a file called plugins-setup.lua, open it and save it with :w . Inside this file there is a function which every time the file is saved installs all the plugins. Since you just downloaded everything you need to install them for the first time.
+The script uses `sudo` for APT packages and installs other tools under
+`~/.local/bin` and `~/.local/opt`. It installs development tools, clipboard
+providers, PDF/browser dependencies, Yazi, lazygit, a Nerd Font, the configured
+Mason packages (including debugpy), and Tree-sitter parsers. Plugins are
+installed/restored from `lazy-lock.json`. Markdown preview uses Node.js on both
+x86-64 and ARM64. APT's Universe repository must be enabled (the Ubuntu default).
 
-3. Enjoy your new NeoVim setup!
+It reuses Neovim >= 0.11 and Node.js >= 22 when available; otherwise it downloads
+an official Neovim release and Node 24 LTS. Other missing user tools come from
+official GitHub releases. Downloads require internet access. Existing tools are
+reused on subsequent runs; this is an installer, not a general updater.
 
-## Plugins
+Options:
 
-Here are some of the key plugins I'm using:
+```bash
+# Skip the large TeX Live installation when LaTeX is not needed:
+./configure.sh --skip-tex
+# Reuse your existing AppImage explicitly:
+./configure.sh --nvim "$HOME/Executables/nvim-linux-x86_64.appimage"
+# Keep your current fonts:
+./configure.sh --skip-font
+```
 
-1. [**Packer**](https://github.com/wbthomason/packer.nvim) - A fast, optimized plugin manager for Neovim.
-   - *Description: Packer provides a more efficient way to manage and load plugins with improved performance.*
+`--skip-tex` skips latexmk and TeX Live, while Zathura remains available for PDFs.
+The default TeX selection includes common LaTeX, science, bibliography and font
+packages; unusual documents may need additional TeX packages. The script does
+not change the terminal font: select **JetBrainsMono Nerd Font** yourself.
+Firefox is installed using Ubuntu's Snap-backed APT package, so a normal Ubuntu
+desktop with Snap support is expected for browser previews.
 
-2. [**Plenary**](https://github.com/nvim-lua/plenary.nvim) - Lua utility functions for Neovim plugins.
-   - *Description: Plenary offers useful Lua functions to simplify plugin development for Neovim.*
+Open a new terminal after installation, or run `source ~/.bashrc`. The script
+adds `~/.local/bin` to Bash's PATH and preserves existing aliases. An existing
+`nvim` alias still takes precedence; update/remove it yourself if it points to
+an old installation. Run the installer again to retry a failed download or
+installation. It never replaces an existing configuration directory, and must
+be run from the clone at `${XDG_CONFIG_HOME:-$HOME/.config}/nvim`.
 
-3. [**vim-nightfly-guicolors**](https://github.com/bluz71/vim-nightfly-guicolors) - A dark Vim theme with vibrant colors.
-   - *Description: Nightfly is a visually appealing dark theme with vibrant and distinguishable colors.*
+Use `:Lazy` to inspect plugins and `:Mason` to inspect language servers and tools.
+`lazy-lock.json` records plugin versions; use `:Lazy restore` to restore them.
 
-4. [**vim-tmux-navigator**](https://github.com/christoomey/vim-tmux-navigator) - Seamless navigation between Vim and Tmux panes.
-   - *Description: Tmux Navigator enables smooth navigation between Vim and Tmux panes with key bindings.*
+## Dependencies
 
-5. [**vim-maximizer**](https://github.com/szw/vim-maximizer) - Maximizes and restores the current window in Vim.
-   - *Description: Vim Maximizer allows you to maximize and restore the current window for distraction-free editing.*
+- Git, a C compiler and download/extraction tools for plugin/parser installation.
+- Python 3 with venv support and Node.js/npm for Mason-managed tools.
+- A true-color terminal and a Nerd Font for icons.
+- A clipboard provider: this setup uses `unnamedplus`; X11 has `xclip` installed.
+- `rg` (ripgrep) for Telescope project search; it must be on Neovim's PATH.
+- Optional external programs: `latexmk` and a TeX distribution for compilation,
+  `zathura` for PDF viewing, `firefox` for Markdown preview, `yazi` for the file
+  manager and `lazygit` for the Git terminal.
+- GDB with DAP support for C++ debugging. Python debugging uses Mason's
+  `debugpy`; install it with `:MasonInstall debugpy` on a fresh machine.
+- `cppcheck` for additional C/C++ diagnostics. It is not in the installed Mason
+  registry; its source is enabled only when the executable is on PATH.
 
-6. [**gitsigns**](https://github.com/lewis6991/gitsigns.nvim) - Git signs and decorations for Neovim.
-   - *Description: Gitsigns provides Git-related signs and decorations in the Neovim gutter for enhanced version control.*
+Mason automatically installs configured language servers and formatters,
+including StyLua, clang-format, Black, shfmt, Prettier and the CMake tools.
+PHP formats through Intelephense. Other supported files format through none-ls
+on save; `<Space>gf` runs none-ls formatting manually.
 
-7. [**vim-surround**](https://github.com/tpope/vim-surround) - Quoting and parenthetical editing in Vim.
-   - *Description: Vim Surround simplifies quoting and editing of parentheses, brackets, and quotes in Vim.*
+The frozen Tree-sitter `master` branch uses legacy single-node query handlers.
+`lua/treesitter-compat.lua` adapts its handlers to Neovim 0.12 capture lists,
+including Bash heredoc injections. Neovim 0.11 keeps the original handlers.
 
-8. [**vim-ReplaceWithRegister**](https://github.com/vim-scripts/ReplaceWithRegister) - Replace text with the contents of a register in Vim.
-    - *Description: ReplaceWithRegister allows you to replace text with the contents of a specified register.*
+Tree-sitter installs an explicit parser list asynchronously. Run `:TSUpdate`
+after changing plugin versions. LaTeX parsing is excluded because VimTeX
+provides its highlighting.
 
-9. [**Comment.nvim**](https://github.com/wbthomason/nvim-comment) - A comment toggler plugin for Neovim.
-    - *Description: Comment.nvim provides easy-to-use toggling of comments for various file types.*
+## Useful mappings
 
-10. [**nvim-tree**](https://github.com/kyazdani42/nvim-tree.lua) - File explorer tree for Neovim.
-    - *Description: Nvim-tree is a feature-rich file explorer tree for Neovim, enhancing file navigation.*
+The leader key is Space. `:WhichKey` shows the available mappings.
 
-11. [**nvim-web-devicons**](https://github.com/kyazdani42/nvim-web-devicons) - Icons for file types in Neovim.
-    - *Description: Nvim-web-devicons adds visually appealing icons to file types in the Nvim-tree file explorer.*
+| Mapping | Action |
+| --- | --- |
+| `<Space>fo` | Find files |
+| `<Space>fs` | Search project text |
+| `<Space>ff` | Search current buffer |
+| `<Space>fl` | List functions/methods in C++ and Python |
+| `<Space>e` | Toggle Neo-tree |
+| `<Space>cw` | Open Yazi at the working directory |
+| `<Space>j` | Toggle Bash terminal |
+| `<Space>nt` | Open a new floating terminal |
+| `<Space>lg` | Toggle lazygit |
+| `<Space>mp` | Toggle Markdown preview (Markdown buffers) |
+| `<Space>lc` | Compile LaTeX (TeX buffers) |
+| `<Space>dc` | Start/continue debugger |
+| `gd` / `K` | LSP definition / hover |
+| `<Space>ca` | LSP code action |
 
-12. [**lualine**](https://github.com/hoob3rt/lualine.nvim) - A fast and customizable statusline for Neovim.
-    - *Description: Lualine provides a fast and highly customizable statusline for a personalized Neovim experience.*
+Completion supports LSP, snippets, buffer words and paths. Command-line
+completion is enabled for `:`, `/` and `?`.
 
-13. [**telescope-fzf-native**](https://github.com/nvim-telescope/telescope-fzf-native.nvim) - FZF integration for Telescope.
-    - *Description: Telescope FZF Native integrates FZF into Telescope for faster and efficient fuzzy finding.*
+## Audit notes (November 2026)
 
-14. [**telescope**](https://github.com/nvim-telescope/telescope.nvim) - A highly extensible fuzzy finder over lists.
-    - *Description: Telescope is a powerful fuzzy finder with extensibility for efficient searching and navigation.*
+Fixed completion dependency declarations, duplicate theme configuration,
+filetype mappings leaking globally, Neo-tree invoking commands for multiple
+operating systems, deprecated LSP hover setup, repeated Markdown preview
+installation and late VimTeX settings. Formatter dependencies and installation
+are now explicit. Snippet files no longer clear an unrelated shared autocommand
+group; Doxygen attention/warning triggers are distinct.
 
-15. [**nvim-treesitter**](https://github.com/nvim-treesitter/nvim-treesitter) - A tree-sitter parser for Neovim.
-    - *Description: Nvim-treesitter enhances syntax highlighting and parsing using the tree-sitter parser.*
+The installed colorizer plugin still uses deprecated `vim.tbl_flatten` internally.
+Telescope is pinned to 0.1.5 and also contains older APIs. These are plugin
+maintenance concerns; plugin versions were preserved during this audit.
 
-Feel free to check out the [init.lua](init.lua) file to see how these plugins are configured.
+Some overlap is intentional: Neo-tree and Yazi are different file managers,
+while Floaterm and ToggleTerm provide different terminal mappings. Both are
+retained so existing shortcuts continue working. Comment.nvim overlaps with
+Neovim's built-in commenting, but is retained to preserve its mappings.
 
-
-## Feedback
-
-If you have any suggestions, improvements, or questions about my NeoVim configuration, feel free to [open an issue](https://github.com/NicoloSalimbeni/nvim-configuration/issues). I appreciate your feedback!
-
-Happy coding! 🚀
-
+The installer supplies `latexmk`, `zathura`, `yazi` and `cppcheck` (unless TeX
+installation is skipped).
+Run `:checkhealth` to inspect environment-specific dependencies.

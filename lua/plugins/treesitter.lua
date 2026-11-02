@@ -3,6 +3,7 @@ return {
   branch = "master",
   build = ":TSUpdate",
   config = function()
+    require("treesitter-compat").setup()
     require("nvim-treesitter.configs").setup({
       ensure_installed = {
         "c",
@@ -10,10 +11,24 @@ return {
         "cmake",
         "json",
         "bash",
+        "lua",
+        "vim",
+        "vimdoc",
+        "query",
+        "python",
+        "html",
+        "css",
+        "javascript",
+        "typescript",
+        "tsx",
+        "php",
+        "markdown",
+        "markdown_inline",
       },
 
-      auto_install = true,
-      sync_install = true,
+      auto_install = false,
+      ignore_install = { "latex" }, -- VimTeX supplies LaTeX highlighting.
+      sync_install = false,
 
       highlight = {
         enable = true,

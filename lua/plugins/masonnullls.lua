@@ -1,6 +1,15 @@
 return {
 	"jay-babu/mason-null-ls.nvim",
-	config = function()
-		require("mason-null-ls").setup({})
-	end,
+	dependencies = { "mason.nvim", "none-ls.nvim" },
+	opts = {
+		ensure_installed = {
+			"stylua",
+			"clang_format",
+			"cmake_lint",
+			"cmake_format",
+			"shfmt",
+			"black",
+			"prettier",
+		},
+	},
 }

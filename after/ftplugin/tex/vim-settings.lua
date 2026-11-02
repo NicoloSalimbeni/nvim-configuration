@@ -1,17 +1,12 @@
-vim.cmd([[
-setlocal wrap
-set spell spelllang=en_us
-let g:vimtex_quickfix_open_on_warning = 0  " Don’t open QuickFix for warnings only
-]])
-vim.api.nvim_set_keymap(
-	"n",
-	"<leader>lc",
-	":VimtexCompile<CR>",
-	{ noremap = true, silent = true, desc = "vimtex compile" }
-)
-vim.keymap.set(
-	"n",
-	"<leader>mn",
-	":w<CR> :FloatermNew ./makeNote.sh <CR>",
-	{ desc = "run makeNote script in current directory" }
-)
+vim.opt_local.wrap = true
+vim.opt_local.spell = true
+vim.opt_local.spelllang = "en_us"
+vim.keymap.set("n", "<leader>lc", "<cmd>VimtexCompile<cr>", {
+	buffer = true,
+	silent = true,
+	desc = "VimTeX compile",
+})
+vim.keymap.set("n", "<leader>mn", "<cmd>write<cr><cmd>FloatermNew ./makeNote.sh<cr>", {
+	buffer = true,
+	desc = "Run makeNote script in current directory",
+})

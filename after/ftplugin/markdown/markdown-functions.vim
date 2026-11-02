@@ -1,6 +1,6 @@
 " custom function to start browser page
-function OpenMarkdownPreview (url)
-  execute "silent ! firefox --private-window " . a:url
+function! OpenMarkdownPreview(url)
+  call jobstart(['firefox', '--private-window', a:url], {'detach': v:true})
 endfunction
 let g:mkdp_browserfunc = 'OpenMarkdownPreview'
 

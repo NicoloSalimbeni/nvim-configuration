@@ -3,7 +3,7 @@ return {
   config = function()
     local notify = require("notify")
     notify.setup({
-      background_colour = "NotifyBackground",
+      background_colour = "#24273a",
       fps = 60,
       icons = {
         DEBUG = "",
@@ -23,5 +23,6 @@ return {
       timeout = 5000,
       top_down = true,
     })
+    vim.notify = notify
   end,
 }

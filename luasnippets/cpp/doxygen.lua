@@ -13,8 +13,6 @@ local fmt = require("luasnip.extras.fmt").fmt
 
 local snippets, autosnippets = {}, {}
 
-local group = vim.api.nvim_create_augroup("Lua Snippets", { clear = true })
-local file_pattern = "*.lua"
 
 -- local function cs(trigger, nodes, opts)
 
@@ -52,7 +50,7 @@ table.insert(snippets, doxygen_variable_comment)
 
 local doxygen_attention_flag = s(
 	{
-		trig = "\\",
+		trig = "@attention",
 		dscr = "dogygen attention flag",
 	},
 	fmt([[\attention {}]], {
@@ -63,10 +61,10 @@ table.insert(snippets, doxygen_attention_flag)
 
 local doxygen_warning_flag = s(
 	{
-		trig = "\\",
+		trig = "@warning",
 		dscr = "dogygen warning flag",
 	},
-	fmt([[\attention {}]], {
+	fmt([[\warning {}]], {
 		i(1, "comment in warning section"),
 	})
 )
