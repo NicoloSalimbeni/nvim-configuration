@@ -19,7 +19,7 @@ return {
       vim.api.nvim_set_keymap("n", "<leader>j", "<cmd>lua _bash_toggle()<CR>", { noremap = true, silent = true })
 
       local TerminalGit = require("toggleterm.terminal").Terminal
-      local lazygit = Terminal:new({ cmd = "lazygit", hidden = true, direction = "float" })
+      local lazygit = Terminal:new({ cmd = "/home/nicolo/go/bin/lazygit", hidden = true, direction = "float" })
 
       function _lazygit_toggle()
         lazygit:toggle()

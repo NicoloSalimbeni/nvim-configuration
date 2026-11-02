@@ -15,6 +15,10 @@ return {
           "bashls",
           "pyright",
           "lua_ls",
+          "html",
+          "cssls",
+          "ts_ls",
+          "intelephense",
         },
       })
     end,
@@ -46,6 +50,7 @@ return {
       vim.api.nvim_set_hl(0, "FloatBorder", { link = "Normal" })
 
       vim.o.updatetime = 300
+
       vim.api.nvim_create_autocmd("CursorHold", {
         callback = function()
           vim.diagnostic.open_float(nil, {
@@ -104,12 +109,34 @@ return {
         },
       })
 
+      setup_lsp("html", {
+        capabilities = capabilities,
+      })
+
+      setup_lsp("cssls", {
+        capabilities = capabilities,
+      })
+
+      setup_lsp("ts_ls", {
+        capabilities = capabilities,
+      })
+
+      -- PHP
+      setup_lsp("intelephense", {
+        capabilities = capabilities,
+      })
+
       vim.keymap.set("n", "K", function()
         vim.lsp.buf.hover()
       end, { desc = "LSP hover" })
 
-      vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "LSP go to definition" })
-      vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "LSP code action" })
+      vim.keymap.set("n", "gd", vim.lsp.buf.definition, {
+        desc = "LSP go to definition",
+      })
+
+      vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {
+        desc = "LSP code action",
+      })
     end,
   },
 }

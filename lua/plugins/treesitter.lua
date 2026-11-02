@@ -1,18 +1,28 @@
 return {
   "nvim-treesitter/nvim-treesitter",
+  branch = "master",
   build = ":TSUpdate",
   config = function()
-    local configs = require("nvim-treesitter.configs")
+    require("nvim-treesitter.configs").setup({
+      ensure_installed = {
+        "c",
+        "cpp",
+        "cmake",
+        "json",
+        "bash",
+      },
 
-    configs.setup({
-      ensure_installed = { "c", "cpp", "cmake", "json", "bash" },
       auto_install = true,
       sync_install = true,
+
       highlight = {
         enable = true,
-        disable = { "latex" }, -- VimTex takes care of .tex files
+        disable = { "latex" }, -- VimTeX handles .tex files
       },
-      indent = { enable = true },
+
+      indent = {
+        enable = true,
+      },
     })
   end,
 }

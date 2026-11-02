@@ -1,48 +1,63 @@
 return {
-  "nvimtools/none-ls.nvim",
-  config = function()
-    local augroup = vim.api.nvim_create_augroup("LspFormatting", {}) -- copied from docs for format on save
-    local null_ls = require("null-ls")
+	"nvimtools/none-ls.nvim",
+	event = { "BufReadPre", "BufNewFile" },
+	config = function()
+		local null_ls = require("null-ls")
 
-    local venv = os.getenv("VIRTUAL_ENV")
-    local py = venv and (venv .. "/bin/python") or "python3"
+		null_ls.setup({
+			sources = {
+				-- Lua
+				null_ls.builtins.formatting.stylua,
 
-    null_ls.setup({
-      sources = {
-        -- lua
-        null_ls.builtins.formatting.stylua,
+				-- C++
+				null_ls.builtins.formatting.clang_format,
+				null_ls.builtins.diagnostics.cppcheck,
 
-        -- c++
-        null_ls.builtins.formatting.clang_format,
-        null_ls.builtins.diagnostics.cppcheck,
+				-- CMake
+				null_ls.builtins.diagnostics.cmake_lint,
+				null_ls.builtins.formatting.cmake_format,
 
-        -- cmake
-        null_ls.builtins.diagnostics.cmake_lint,
-        null_ls.builtins.formatting.cmake_format,
+				-- Bash
+				null_ls.builtins.formatting.shfmt,
 
-        -- bash
-        null_ls.builtins.formatting.shfmt,
+				-- Python
+				null_ls.builtins.formatting.black,
 
-        -- python
-        null_ls.builtins.formatting.black,
-      },
+				-- JavaScript / TypeScript / HTML / CSS / JSON
+				null_ls.builtins.formatting.prettier,
 
-      -- you can reuse a shared lspconfig on_attach callback here
-      -- I copied this from the documentation for format on save
-      on_attach = function(client, bufnr)
-        if client.supports_method("textDocument/formatting") then
-          vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            group = augroup,
-            buffer = bufnr,
-            callback = function()
-              vim.lsp.buf.format({ async = false })
-            end,
-          })
-        end
-      end,
-    })
+				-- PHP
+				-- null_ls.builtins.formatting.phpcsfixer,
+			},
 
-    vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, { desc = "format current file" })
-  end,
+			on_attach = function(client, bufnr)
+				if client:supports_method("textDocument/formatting") then
+					local group = vim.api.nvim_create_augroup("LspFormatting_" .. bufnr, { clear = true })
+
+					vim.api.nvim_create_autocmd("BufWritePre", {
+						group = group,
+						buffer = bufnr,
+						callback = function()
+							vim.lsp.buf.format({
+								bufnr = bufnr,
+								filter = function(format_client)
+									return format_client.name == "null-ls"
+								end,
+								timeout_ms = 5000,
+							})
+						end,
+					})
+				end
+			end,
+		})
+
+		vim.keymap.set("n", "<leader>gf", function()
+			vim.lsp.buf.format({
+				filter = function(client)
+					return client.name == "null-ls"
+				end,
+				timeout_ms = 5000,
+			})
+		end, { desc = "Format current file" })
+	end,
 }
